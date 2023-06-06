@@ -14,7 +14,8 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewURLParser: true});
+//mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewURLParser: true});
+mongoose.connect("mongodb+srv://dailyweb0524:ORVhhwxBTc4EkhUZ@cluster0.6gezmfg.mongodb.net/todolistDB", {useNewURLParser: true});
 
 const itemsSchema = new mongoose.Schema({
     name: String
@@ -57,7 +58,6 @@ app.get("/", function(req, res){
             res.redirect("/" + day);
         }else{
             res.redirect("/" + day);   
-            //res.render("list", {listTitle: day, newListItems: foundItems});
         }
       })
       .catch(err => {
@@ -92,21 +92,15 @@ app.post("/", function(req, res){
         name: itemName
     });
     const listName = req.body.list;
-    // console.log("list name: " + listName);
-    // if(listName === day){
-    //     item.save();
-    //     res.redirect("/");
-    // }else{
-        List.findOne({name: listName})
-        .then(function(foundList){
-            foundList.items.push(item);
-            foundList.save();
-            res.redirect("/" + listName);
-        })
-        .catch(function(err){
-            console.log(err);
-        });
-    //}
+    List.findOne({name: listName})
+    .then(function(foundList){
+        foundList.items.push(item);
+        foundList.save();
+        res.redirect("/" + listName);
+    })
+    .catch(function(err){
+        console.log(err);
+    });
 });
 
 app.get("/about", function(req, res){
@@ -116,17 +110,7 @@ app.get("/about", function(req, res){
 app.post("/delete", function(req, res){
     const toDeleteID = req.body.checkbox;
     const listName = req.body.listName;
-    
-    if(listName === day){
-        Item.findByIdAndRemove(toDeleteID)
-            .then(function(){
-                console.log("Successfully deleted item");
-                res.redirect("/");
-            })
-            .catch(function(err){
-                console.log(err);
-            });    
-    }else{
+
         List.findOneAndUpdate({name: listName}, {$pull: {items: {_id: toDeleteID}}})
         .then(function(foundList){
             res.redirect("/" + listName);
@@ -135,7 +119,27 @@ app.post("/delete", function(req, res){
             console.log(err);
         });
         
-    }
+
+    //version 2: able to delete from different list but initial page has different list(only has item list)
+    // if(listName === day){
+    //     Item.findByIdAndRemove(toDeleteID)
+    //         .then(function(){
+    //             console.log("Successfully deleted item");
+    //             res.redirect("/");
+    //         })
+    //         .catch(function(err){
+    //             console.log(err);
+    //         });    
+    // }else{
+    //     List.findOneAndUpdate({name: listName}, {$pull: {items: {_id: toDeleteID}}})
+    //     .then(function(foundList){
+    //         res.redirect("/" + listName);
+    //     })
+    //     .catch(function(err){
+    //         console.log(err);
+    //     });
+        
+    // }
     
     //version 1: of delete Item, when we only have one list
     // Item.findByIdAndRemove(toDeleteID)
