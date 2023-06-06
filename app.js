@@ -54,9 +54,10 @@ app.get("/", function(req, res){
             .catch((err) => {
                 console.log(err);
             });
-            res.redirect("/");
-        }else{   
-            res.render("list", {listTitle: day, newListItems: foundItems});
+            res.redirect("/" + day);
+        }else{
+            res.redirect("/" + day);   
+            //res.render("list", {listTitle: day, newListItems: foundItems});
         }
       })
       .catch(err => {
@@ -91,11 +92,11 @@ app.post("/", function(req, res){
         name: itemName
     });
     const listName = req.body.list;
-    console.log("list name: " + listName);
-    if(listName === day){
-        item.save();
-        res.redirect("/");
-    }else{
+    // console.log("list name: " + listName);
+    // if(listName === day){
+    //     item.save();
+    //     res.redirect("/");
+    // }else{
         List.findOne({name: listName})
         .then(function(foundList){
             foundList.items.push(item);
@@ -105,7 +106,7 @@ app.post("/", function(req, res){
         .catch(function(err){
             console.log(err);
         });
-    }
+    //}
 });
 
 app.get("/about", function(req, res){
@@ -136,7 +137,7 @@ app.post("/delete", function(req, res){
         
     }
     
-    //version 1 of delete Item, when we only have one list
+    //version 1: of delete Item, when we only have one list
     // Item.findByIdAndRemove(toDeleteID)
     //     .then(function(){
     //         console.log("Successfully deleted item");
