@@ -8,9 +8,6 @@ const _ = require("lodash");
 
 const app = express();
 
-//const items = ["Buy Food", "Cook Food", "Eat Food"];
-// const workItems = [];
-
 const day = date.getDay();
 
 app.set("view engine", "ejs");
@@ -64,7 +61,6 @@ app.get("/", function(req, res){
       })
       .catch(err => {
         console.log(err);
-        // Handle the error appropriately
       });
 });
 
@@ -73,10 +69,8 @@ app.get("/:customListName", function(req, res){
     List.findOne({name: customListName})
         .then(function(foundList){
             if(foundList){
-                //console.log("Exists");
                 res.render("list", {listTitle: foundList.name, newListItems: foundList.items});
             }else{
-                //console.log("Does not Exists");
                 const list = new List({
                     name: customListName,
                     items: itemList
@@ -92,17 +86,6 @@ app.get("/:customListName", function(req, res){
 });
 
 app.post("/", function(req, res){
-    // const item = req.body.newItem; 
-    // if(req.body.list === "WorkList"){
-    //     workItems.push(item);
-    //     res.redirect("/work");
-    // }else{
-    //     items.push(item);
-    //     res.redirect("/");
-    // }
-
-
-
     const itemName = req.body.newItem;
     const item = new Item({
         name: itemName
@@ -115,7 +98,6 @@ app.post("/", function(req, res){
     }else{
         List.findOne({name: listName})
         .then(function(foundList){
-            //console.log(foundList);
             foundList.items.push(item);
             foundList.save();
             res.redirect("/" + listName);
@@ -125,10 +107,6 @@ app.post("/", function(req, res){
         });
     }
 });
-
-// app.get("/work", function(req, res){
-//     res.render("list", {listTitle: "WorkList", newListItems: workItems});
-// });
 
 app.get("/about", function(req, res){
     res.render("about");
@@ -158,8 +136,7 @@ app.post("/delete", function(req, res){
         
     }
     
-    
-    
+    //version 1 of delete Item, when we only have one list
     // Item.findByIdAndRemove(toDeleteID)
     //     .then(function(){
     //         console.log("Successfully deleted item");
