@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
 
 //mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewURLParser: true});
-mongoose.connect("mongodb+srv://dailyweb0524:ORVhhwxBTc4EkhUZ@cluster0.6gezmfg.mongodb.net/todolistDB", {useNewURLParser: true});
+mongoose.connect("mongodb+srv://<username>:<password>@cluster0.6gezmfg.mongodb.net/todolistDB", {useNewURLParser: true});
 
 const itemsSchema = new mongoose.Schema({
     name: String
